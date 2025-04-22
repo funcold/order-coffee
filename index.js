@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
         newFieldset.querySelector('select').selectedIndex = 0;
         newFieldset.querySelectorAll('input[type="radio"]').forEach((el, i) => el.checked = i === 0);
         newFieldset.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        const wishesInput = newFieldset.querySelector('.wishes-input');
+        const wishesOutput = newFieldset.querySelector('.wishes-output');
+        wishesInput.addEventListener('input', () => {
+            wishesOutput.innerHTML = highlightUrgentWords(wishesInput.value);
+        });
 
         const fieldsetIndex = document.querySelectorAll('.beverage').length;
         const newRadioName = `milk-${fieldsetIndex}`;
@@ -79,6 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHeaders();
         updateRemoveButtons();
     });
+
+    function highlightUrgentWords(text) {
+        const urgentWords = [
+            'срочно', 'быстрее', 'побыстрее', 
+            'скорее', 'поскорее', 'очень нужно'
+        ];
+        
+        return text.replace(
+            new RegExp(urgentWords.join('|'), 'gi'), 
+            match => `<b>${match}</b>`
+        );
+    }
 
     // Модальное окно
     function getDrinkWord(count) {
@@ -131,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <th>Напиток</th>
                         <th>Молоко</th>
                         <th>Дополнительно</th>
+                        <th>Пожелания</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -153,13 +171,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 .map(checkbox => checkbox.value);
             const optionsText = getOptionsText(options);
 
+            const wishes = beverage.querySelector('.wishes-input').value;
+            const highlightedWishes = highlightUrgentWords(wishes);
+
             tableHTML += `
                 <tr>
                     <td>${drinkName}</td>
                     <td>${milkName}</td>
                     <td>${optionsText}</td>
+                    <td>${highlightedWishes || '-'}</td>
                 </tr>
             `;
+        });
+
+        document.querySelectorAll('.wishes-input').forEach(input => {
+            const output = input.closest('.field').querySelector('.wishes-output');
+            input.addEventListener('input', () => {
+                output.innerHTML = highlightUrgentWords(input.value);
+            });
         });
 
         tableHTML += `
