@@ -79,19 +79,39 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHeaders();
         updateRemoveButtons();
     });
-});
 
-document.querySelector('.submit-button').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('modalOverlay').style.display = 'flex';
-});
-
-document.getElementById('closeModal').addEventListener('click', function() {
-    document.getElementById('modalOverlay').style.display = 'none';
-});
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-    if (e.target === this) {
-        this.style.display = 'none';
+    // Модальное окно
+    function getDrinkWord(count) {
+        const lastTwo = count % 100;
+        const lastOne = count % 10;
+        
+        if (lastTwo >= 11 && lastTwo <= 19) {
+            return 'напитков';
+        }
+        if (lastOne === 1) {
+            return 'напиток';
+        }
+        if (lastOne >= 2 && lastOne <= 4) {
+            return 'напитка';
+        }
+        return 'напитков';
     }
+
+    document.querySelector('.submit-button').addEventListener('click', function(e) {
+        e.preventDefault();
+        const drinkCount = document.querySelectorAll('.beverage').length;
+        const drinkWord = getDrinkWord(drinkCount);
+        document.querySelector('.modal-content').textContent = `Вы заказали ${drinkCount} ${drinkWord}`;
+        document.getElementById('modalOverlay').style.display = 'flex';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    });
+
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+        }
+    });
 });
