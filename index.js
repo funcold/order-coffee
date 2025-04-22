@@ -165,10 +165,39 @@ document.addEventListener('DOMContentLoaded', () => {
         tableHTML += `
                 </tbody>
             </table>
+            <div class="time-selection">
+                <label for="order-time">Выберите время заказа:</label>
+                <input type="time" id="order-time" required>
+            </div>
+            <button class="confirm-button">Оформить</button>
         `;
 
         document.querySelector('.modal-content').innerHTML = tableHTML;
         document.getElementById('modalOverlay').style.display = 'flex';
+
+        document.querySelector('.confirm-button')?.addEventListener('click', function() {
+            const timeInput = document.getElementById('order-time');
+            const selectedTime = timeInput.value;
+            
+            if (!selectedTime) {
+                timeInput.style.borderColor = 'red';
+                alert('Пожалуйста, укажите время заказа');
+                return;
+            }
+
+            const now = new Date();
+            const [hours, minutes] = selectedTime.split(':');
+            const selectedDate = new Date();
+            selectedDate.setHours(hours, minutes);
+            
+            if (selectedDate <= now) {
+                timeInput.style.borderColor = 'red';
+                alert('Мы не умеем перемещаться во времени. Выберите время позже, чем текущее');
+            } else {
+                timeInput.style.borderColor = '';
+                document.getElementById('modalOverlay').style.display = 'none';
+            }
+        });
     });
 
     document.getElementById('closeModal').addEventListener('click', function() {
