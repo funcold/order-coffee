@@ -196,6 +196,17 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 timeInput.style.borderColor = '';
                 document.getElementById('modalOverlay').style.display = 'none';
+
+                //document.querySelector('form').reset();
+                //window.location.href = 'index.html';
+
+                document.querySelector('form').reset();
+                const beverages = document.querySelectorAll('.beverage');
+                for (let i = beverages.length - 1; i > 0; i--) {
+                    beverages[i].remove();
+                }
+                updateHeaders();
+                updateRemoveButtons();
             }
         });
     });
