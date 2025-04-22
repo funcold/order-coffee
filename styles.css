@@ -83,3 +83,21 @@
     text-align: center;
     font-size: 18px;
   }
+
+  .order-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.order-table th, .order-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}

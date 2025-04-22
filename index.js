@@ -97,11 +97,77 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'напитков';
     }
 
+    function getMilkName(value) {
+        const milkTypes = {
+            'usual': 'обычное',
+            'no-fat': 'обезжиренное',
+            'soy': 'соевое',
+            'coconut': 'кокосовое'
+        };
+        return milkTypes[value] || '';
+    }
+
+    function getOptionsText(options) {
+        const optionNames = {
+            'whipped cream': 'взбитые сливки',
+            'marshmallow': 'зефирки',
+            'chocolate': 'шоколад',
+            'cinnamon': 'корица'
+        };
+        return options.map(opt => optionNames[opt]).join(', ');
+    }
+
     document.querySelector('.submit-button').addEventListener('click', function(e) {
         e.preventDefault();
-        const drinkCount = document.querySelectorAll('.beverage').length;
+        const beverages = document.querySelectorAll('.beverage');
+        const drinkCount = beverages.length;
         const drinkWord = getDrinkWord(drinkCount);
-        document.querySelector('.modal-content').textContent = `Вы заказали ${drinkCount} ${drinkWord}`;
+        
+        let tableHTML = `
+            <div>Вы заказали ${drinkCount} ${drinkWord}</div>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Напиток</th>
+                        <th>Молоко</th>
+                        <th>Дополнительно</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        beverages.forEach(beverage => {
+            const drinkType = beverage.querySelector('select').value;
+            const drinkNames = {
+                'espresso': 'Эспрессо',
+                'capuccino': 'Капучино',
+                'cacao': 'Какао'
+            };
+            const drinkName = drinkNames[drinkType] || drinkType;
+
+            const milkRadio = beverage.querySelector('input[name^="milk"]:checked');
+            const milkType = milkRadio ? milkRadio.value : '';
+            const milkName = getMilkName(milkType);
+
+            const options = Array.from(beverage.querySelectorAll('input[name="options"]:checked'))
+                .map(checkbox => checkbox.value);
+            const optionsText = getOptionsText(options);
+
+            tableHTML += `
+                <tr>
+                    <td>${drinkName}</td>
+                    <td>${milkName}</td>
+                    <td>${optionsText}</td>
+                </tr>
+            `;
+        });
+
+        tableHTML += `
+                </tbody>
+            </table>
+        `;
+
+        document.querySelector('.modal-content').innerHTML = tableHTML;
         document.getElementById('modalOverlay').style.display = 'flex';
     });
 
